@@ -1,0 +1,69 @@
+<mujoco>
+    <!-- <option gravity="0 0 0" /> -->
+    <asset>
+        <mesh
+            name="test_mesh1"
+            file="queen_mew.stl"
+            scale="0.01 0.01 0.01" />
+
+        <mesh
+            name="test_mesh2"
+            file="not_a_toy_knife.stl"
+            scale="0.01 0.01 0.01" />
+
+        <mesh
+            name="test_mesh3"
+            file="eiffel_final.stl"
+            scale="0.04 0.04 0.04" />
+
+        <texture type="cube" name="minecraft_texture" file="Minecraft_Launcher.png" />
+        <material name="minecraft_material" texture="minecraft_texture" />
+
+        <texture type="cube" name="bedrock_texture" file="Minecraft_Bedrock.png" />
+        <material name="bedrock_material" texture="bedrock_texture" />
+    </asset>
+    <worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1" />
+        <geom type="plane" size="5 5 0.1" rgba=".9 0 0 1" />
+        <body pos="0 0 1" >
+            <joint type="free" />
+            <geom type="mesh" mesh="test_mesh1" rgba="0.9 0.9 0 1"/>
+        </body>
+ 
+        <body pos="2 0 1" >
+            <joint type="free" />
+            <geom type="mesh" mesh="test_mesh2" rgba="0 0.9 0 1"/>
+        </body>
+ 
+         <body pos="0 2 1" >
+            <joint type="free" />
+            <geom type="mesh" mesh="test_mesh3" rgba="0 0.9 0.9 .1"/>
+        </body>
+
+        <body pos="2 2 1">
+           <joint type="free" />
+           <geom type="box" size=".2 .2 .2" material="minecraft_material" />
+        </body>
+
+        <body pos="-2 1 0.5">
+           <joint type="free" />
+           <geom type="box" size=".2 .2 .2" material="bedrock_material" />
+        </body>
+        <body pos="-2 1 1">
+           <joint type="free" />
+           <geom type="box" size=".2 .2 .2" material="bedrock_material" />
+        </body>
+
+        <body pos="-2 1 1.5">
+           <joint type="free" />
+           <geom type="box" size=".2 .2 .2" material="bedrock_material" />
+        </body>
+
+        <body pos="-2 1 2">
+           <joint type="free" />
+           <geom type="box" size=".2 .2 .2" material="bedrock_material" />
+        </body>
+
+
+    </worldbody>
+</mujoco>
