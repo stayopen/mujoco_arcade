@@ -32,7 +32,7 @@ bin_width=.2
 
 
 ball_list = []
-for b_xpos in np.arange(-2,2.01,0.1):
+for b_xpos in np.arange(-2.01,2.01,0.1):
     for b_zpos in np.arange(0, 5, 0.1):
         ball = f""" <body pos=".2 {b_xpos} {13.6 + b_zpos}">
 	          <freejoint />
