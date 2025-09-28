@@ -5,7 +5,7 @@ pin_list = []
 z = 0
 dz = 0.1
 r = 0.03
-for i in range(15):
+for i in range(17):
     
     for y_pos in np.arange(-2.7, 2.71, .2):
         pin = f"""<body pos=".2 {y_pos} {4.5+z}" euler="0 90 0">
@@ -34,10 +34,10 @@ bin_width=.2
 
 ball_list = []
 for b_xpos in np.arange(-2.01,2.01,0.1):
-    for b_zpos in np.arange(0, 1, 0.1):
+    for b_zpos in np.arange(0, 1.5, 0.1):
         ball = f""" <body pos=".2 {b_xpos} {13.6 + b_zpos}">
 	          <freejoint />
-			  <geom type="sphere" size=".03" rgba="1 0. 0 1"/>
+			  <geom type="sphere" size=".01" rgba="1 0. 0 1"/>
 	  </body>"""
         ball_list.append(ball)
 
@@ -85,27 +85,27 @@ xml = f"""<mujoco>
 		  </body>
 
       <body name="left_ball_ramp" pos=".2 -1.75 10" euler="40 0 0">
-			  <geom type="box" size=".12 .05 2.55" rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".12 .05 2.6" rgba="0.4 .9 09 1"/>
 	  </body>
 
       <body name="right_ball_ramp" pos=".2 1.75 10" euler="-40 0 0">
-			  <geom type="box" size=".12 .05 2.55    " rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".12 .05 2.6    " rgba="0.4 .9 09 1"/>
 	  </body>
 
       <body name="left_ball_ramp2" pos=".2 -1.75 11.6" euler="40 0 0">
-			  <geom type="box" size=".12 .05 2.55" rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".12 .05 2.6" rgba="0.4 .9 09 1"/>
 	  </body>
 
       <body name="right_ball_ramp2" pos=".2 1.75 11.6" euler="-40 0 0">
-			  <geom type="box" size=".12 .05 2.55    " rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".12 .05 2.6    " rgba="0.4 .9 09 1"/>
 
 	  </body>
       <body name="left_ball_ramp3" pos=".2 -1.75 10.5" euler="40 0 0">
-			  <geom type="box" size=".12 .05 2.55" rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".12 .05 2.6" rgba="0.4 .9 09 1"/>
 	  </body>
 
       <body name="right_ball_ramp3" pos=".2 1.75 10.5" euler="-40 0 0">
-			  <geom type="box" size=".12 .05 2.55    " rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".12 .05 2.6    " rgba="0.4 .9 09 1"/>
               
 	  </body>
       
