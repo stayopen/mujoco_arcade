@@ -1,68 +1,36 @@
 
-dz = 0
-body_layers = []
-for i in range(3):
+import numpy as np
+pin_list = []
+for y_pos in np.arange(-2.7, 2.71, .2):
+    pin = f"""<body pos=".2 {y_pos} 4.5" euler="0 90 0">
+			  <geom type="cylinder" size=".05 .1" rgba="0.4 .9 0.9 1"/>
+	  </body>"""
+    pin_list.append(pin)
+pin_xml = "\n".join(pin_list)
 
-    dy =0.05
-    body_layer=f"""<body pos="0 0 {dz + .1}">
-    <freejoint />
-            <geom type="box" size=".01 {dy} 0.1" rgba="0.4 .9 09 1"/>
-        </body>
-    <body pos="0.2 0 {dz + .1}">
-    <freejoint />
-            <geom type="box" size=".01 {dy} .1" rgba="0.4 .9 09 1"/>
-        </body>
-    <body  pos="0.4 0 {dz + .1}">
-    <freejoint />
-        <geom type="box" size=".01 {dy} .1" rgba="0.4 .9 09 1"/>
-        </body>
-    <body  pos="0.6 0 {dz + .1}">
-    <freejoint />
-        <geom type="box" size=".01 {dy} .1" rgba="0.4 .9 09 1"/>
-        </body>
-    <body  pos="0.8 0 {dz + .1}">
-    <freejoint />
-        <geom type="box" size=".01 {dy} .1" rgba="0.4 .9 09 1"/>
-        </body>
-    <body  pos="1.0 0 {dz + .1}">
-    <freejoint />
-        <geom type="box" size=".01 {dy} .1" rgba="0.4 .9 09 1"/>
-        </body>
+# create balls
+bin_width=.2
 
 
-    <body  pos=".095 0 {dz + .21}">
-    <freejoint />
-        <geom type="box" size=".105 {dy} .01" rgba="0.9 .4 09 1"/>
-        </body>
-    <body  pos=".30 0 {dz + .21}">
-    <freejoint />
-        <geom type="box" size=".10 {dy} .01" rgba="0.9 .4 09 1"/>
-    </body>
-    <body  pos=".50 0 {dz + .21}">
-    <freejoint />
-        <geom type="box" size=".10 {dy} .01" rgba="0.9 .4 09 1"/>
-    </body>
-    <body  pos=".70 0 {dz + .21}">
-    <freejoint />
-        <geom type="box" size=".10 {dy} .01" rgba="0.9 .4 09 1"/>
-    </body>
-    <body  pos=".905 0 {dz + .21}">
-    <freejoint />
-        <geom type="box" size=".105 {dy} .01" rgba="0.9 .4 09 1"/>
-    </body>"""
-
-    dz = dz + 0.22
-    body_layers.append(body_layer)
-
-	balls = """ <body pos=".2 2 12">
-	          <freejoint />
-			  <geom type="sphere" size=".05" rgba="1 0. 0 1"/>
-	  </body>
-	  <body pos=".2 -2 12">
+ball_list = []
+for b_xpos in np.arange(-2,2.01,0.1):
+    for b_zpos in np.arange(0, 1, 0.2):
+        ball = f""" <body pos=".2 {b_xpos} {12 + b_zpos}">
 	          <freejoint />
 			  <geom type="sphere" size=".05" rgba="1 0. 0 1"/>
 	  </body>"""
-bodies_xml = "\n".join(body_layers)
+        ball_list.append(ball)
+
+balls_xml = "\n".join(ball_list)
+
+
+sep_list = []
+for y_pos in np.arange(-2.7, 2.71, .2):
+    sep = f"""<body  pos=".2 {y_pos} 2">
+			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
+		  </body> """
+    sep_list.append(sep)
+sep_xml = "\n".join(sep_list)
 
 
 xml = f"""<mujoco>
@@ -97,60 +65,16 @@ xml = f"""<mujoco>
 		  </body>
 
       <body name="left_ball_ramp" pos=".2 -1.75 10" euler="40 0 0">
-			  <geom type="box" size=".1 .01 2.6" rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".1 .01 2.5" rgba="0.4 .9 09 1"/>
 	  </body>
 
       <body name="right_ball_ramp" pos=".2 1.75 10" euler="-40 0 0">
-			  <geom type="box" size=".1 .01 2.6" rgba="0.4 .9 09 1"/>
+			  <geom type="box" size=".1 .01 2.5" rgba="0.4 .9 09 1"/>
 	  </body>
 
-
-
-      <body  pos=".2 -2.75 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-      <body pos=".2 -2.55 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-
-      <body  pos=".2 -2.35 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-      <body pos=".2 -2.15 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-
-      <body  pos=".2 -1.95 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-      <body pos=".2 -1.75 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-
-      <body  pos=".2 -2.75 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-      <body pos=".2 -2.55 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-
-      <body  pos=".2 -2.75 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-      <body pos=".2 -2.55 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-
-      <body  pos=".2 -2.75 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-		  </body>
-      <body pos=".2 -2.55 2">
-			  <geom type="box" size=".1 .01 2" rgba="0.4 .9 09 1"/>
-	  </body>
-	  <body pos=".2 -2.55 4.5" euler="0 90 0">
-			  <geom type="cylinder" size=".05 .1" rgba="0.4 .9 0.9 1"/>
-	  </body>
-
+      {balls_xml}
+      {pin_xml}
+      {sep_xml}
   </worldbody>
 </mujoco>
 """
