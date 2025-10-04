@@ -4,7 +4,7 @@ import colorsys
 
 pin_list = []
 
-N = 200
+N = 400
 dx = 1
 dy = 3
 dz = 10
@@ -15,8 +15,8 @@ hues = np.linspace(0, 1, N, endpoint=False)
 colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 
 initial_radius = 2
-n_turns = 5
-final_radius = 10
+n_turns = 10
+final_radius = 16
 
 b = (final_radius - initial_radius)/(2*np.pi*n_turns)
 
