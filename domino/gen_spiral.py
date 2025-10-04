@@ -38,9 +38,6 @@ new_s = np.interp(Ls, L, s)
 x = (initial_radius + b*new_s)*np.cos(new_s)
 y = (initial_radius + b*new_s)*np.sin(new_s)
 
- 
-
-
 domino_list = []
 
 for i in range(N):
@@ -56,8 +53,6 @@ for i in range(N):
          <freejoint/>
         </body>"""
     domino_list.append(domino)
- 
-
  
 
 xml = f"""<mujoco>
