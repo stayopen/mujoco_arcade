@@ -1,0 +1,26 @@
+<mujoco>
+    <option gravity="0 0 -9.81 " />
+    <worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 2" dir="0 0 -1" />
+        <geom type="plane" size="4 4 0.1" rgba=".5 .5 .5 1" />
+        <body pos="0 0 3" euler="0 0 0">
+            <joint type="hinge" name="joint0" axis="-1 0 0" pos="0 0 0.5" />
+            <geom type="cylinder" size=".05 .5"  mass="0" rgba="0.3 0.9 0.6 1"/>
+
+            <body pos="0 0 -.5" euler="0 0 0">
+              <geom type="sphere" size=".1" mass="1" rgba="0.39 0.3 0.6 1"/>
+              <!-- <body pos="0 0 0.5" euler="0 0 0">
+                   <geom type="sphere" size=".1" rgba="0.39 0.7 0.6 1"/>
+              </body> -->
+               
+            </body>
+           
+        </body>
+    </worldbody>
+    <actuator>
+        <motor name="torque" joint="joint0" gear="1" ctrllimited="true" ctrlrange="-100 100" />
+        <position name="position_servo" joint="joint0" kp="0"  />
+        <velocity name="velocity_servo" joint="joint0" kv="0" />
+    </actuator>
+
+</mujoco>
