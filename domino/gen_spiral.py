@@ -48,7 +48,7 @@ for i in range(N):
     euler_x = 0
     if i == N-1:
         euler_x = 25
-    domino = f"""<body pos="{x[i]} {y[i]} {dzz}" euler="{euler_x} 0 {new_s[i]* 180/np.pi + 90}" >
+    domino = f"""    <body pos="{x[i]} {y[i]} {dzz}" euler="{euler_x} 0 {new_s[i]* 180/np.pi + 90}" >
          <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{c[0]} {c[1]} {c[2]} 1"/>
          <freejoint/>
         </body>"""
@@ -74,7 +74,7 @@ xml = f"""<mujoco>
     <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
  
       
-      {domino_list}
+{"\n".join(domino_list)}
   </worldbody>
 </mujoco>
 """
