@@ -5,30 +5,48 @@ import colorsys
 
 layer = 20
 dx = 1
-dy = 3
-dz = 6
+dy = 6
+dz = 3
 
 scale = 0.1
 
  
- 
-
+N = layer
 domino_list = []
-
+height = 0
 for i in range(N):
     dxx = dx * scale
     dyy = dy * scale
     dzz = dz * scale
-    color1 = (0.9, 0, 0)
-    color2 = (0, 0.9, 0)
+    color1 = (0.1, 0.7 ,0.7)
    
-    if i == N-1:
-        euler_x = 25
-    domino = f"""    <body pos="{x[i]} {y[i]} {dzz}" euler="{euler_x} 0 {new_s[i]* 180/np.pi + 90}" >
-         <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{c[0]} {c[1]} {c[2]} 1"/>
+   
+    euler_x = 0
+    # if i == N-1:
+    #     euler_x = 25
+
+    domino = f"""
+        <body pos="0 0 {dzz + height}" euler="0 0 0" >
+         <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
          <freejoint/>
-        </body>"""
+        </body>
+        <body pos="{2*dyy - 2*dxx} 0 {dzz + height}" euler="0 0 0" >
+         <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
+         <freejoint/>
+        </body>
+        
+        <body pos="{dyy - dxx} {dyy - dxx} {3*dzz + height}" euler="0 0 90" >
+         <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
+         <freejoint/>
+        </body>
+        <body pos="{dyy - dxx} {dxx- dyy} {3*dzz + height}" euler="0 0 90" >
+         <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
+         <freejoint/>
+        </body>
+        
+        """
     domino_list.append(domino)
+    height += 4* dzz
  
 
 xml = f"""<mujoco>
@@ -56,6 +74,6 @@ xml = f"""<mujoco>
 """
 
  
-with open("domino/domino2.xml", "w", encoding="utf-8") as f:
+with open("domino/domino1x1tower.xml", "w", encoding="utf-8") as f:
     f.write(xml)
-print("Wrote domino2.xml")
+print("Wrote domino1x1tower.xml")
