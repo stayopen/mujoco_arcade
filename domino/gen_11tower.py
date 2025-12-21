@@ -18,7 +18,7 @@ for i in range(N):
     dxx = dx * scale
     dyy = dy * scale
     dzz = dz * scale
-    color1 = (0.1, 0.7 ,0.7)
+    color1 = (144/255., 213/255. , 1)
    
    
     euler_x = 0
