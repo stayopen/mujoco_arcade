@@ -22,8 +22,6 @@ for i in range(N, 0, -1):
    
     color2 = (255/255., 213/255. , 133/255.)
     euler_x = 0
-    # if i == N-1:
-    #     euler_x = 25
 
     x_offset = 0
     for j in range(i):
@@ -36,10 +34,32 @@ for i in range(N, 0, -1):
          <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
          <freejoint/>
         </body>
-   
+        
         
         """
         domino_list.append(domino)
+        if i == N:
+            if x_offset == 0:
+                domino = f"""
+                <body pos="{x_offset} 0 {dzz + height}" euler="0 0 0" >
+                <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
+                <freejoint/>
+                </body>"""
+            else:
+                domino = f"""
+                <body pos="{x_offset} 0 {dzz + height}" euler="0 0 0" >
+                <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
+                <freejoint/>
+                </body>
+                <body pos="{-x_offset} 0 {dzz + height}" euler="0 0 0" >
+                <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{color1[0]} {color1[1]} {color1[2]} 1"/>
+                <freejoint/>
+                </body>
+                            
+                
+                """
+            domino_list.append(domino)
+
         x_offset = x_offset + (2*dzz - 2*dxx)  
 
     x_offset = - x_offset + 2*dzz - 2*dxx
