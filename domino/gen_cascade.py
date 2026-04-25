@@ -14,29 +14,52 @@ HEADER = """<mujoco>
   </asset>
 """
 
-dxx = 0.05
-dyy = 0.12
-dzz = 0.25
-spacing = 2 * dzz - 2 * dxx
-TILT = -8
+dx = 1
+dy = 3
+dz = 10
+scale = 0.1
+dxx = dx * scale
+dyy = dy * scale
+dzz = dz * scale
+
+target_spacing = 1.4
+
+amplitude = 8.0
+wavelength = 30.0
+n_waves = 5
+
+t = np.linspace(0, n_waves * wavelength, 50000)
+px = amplitude * np.sin(2 * np.pi * t / wavelength)
+py = t
+
+ds = np.sqrt(np.gradient(px)**2 + np.gradient(py)**2)
+L = np.cumsum(ds)
+total_length = L[-1]
+
+N = min(int(total_length / target_spacing), 295)
+
+Ls = np.linspace(0, L[-1], N)
+px_f = np.interp(Ls, L, px)
+py_f = np.interp(Ls, L, py)
+
+angles = np.arctan2(np.gradient(px_f), np.gradient(py_f))
+
+hues = np.linspace(0, 1, N, endpoint=False)
+colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 
 domino_list = []
 count = 0
 
-N = 290
-hues = np.linspace(0, 1, N, endpoint=False)
-colors = [colorsys.hsv_to_rgb(h, 0.9, 0.95) for h in hues]
-
-y = dyy
 for i in range(N):
     c = colors[i]
-    ex = 0 if i > 0 else TILT
-    domino_list.append(f'    <body pos="0 {y:.4f} {dzz:.4f}" euler="{ex} 0 0">')
+    angle_deg = np.degrees(angles[i]) + 90
+    tilt = -5 if i == 0 else 0
+
+    domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="{tilt:.1f} 0 {angle_deg:.1f}">')
     domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')
     domino_list.append(f'    </body>')
     count += 1
-    y += 2 * dyy + spacing * 0.15
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>
@@ -49,4 +72,4 @@ xml = f"""{HEADER}  <worldbody>
 
 with open("domino/cascade.xml", "w", encoding="utf-8") as f:
     f.write(xml)
-print(f"Wrote cascade.xml ({count} blocks)")
+print(f"Wrote cascade.xml ({count} blocks, path={total_length:.1f}, spacing={total_length/N:.2f})")

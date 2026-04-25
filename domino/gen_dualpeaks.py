@@ -14,62 +14,64 @@ HEADER = """<mujoco>
   </asset>
 """
 
-dxx = 0.1
-dyy = 0.3
-dzz = 0.6
-TILT = -8
+dx = 1
+dy = 3
+dz = 6
+scale = 0.1
+dxx = dx * scale
+dyy = dy * scale
+dzz = dz * scale
 
+N = 10
 domino_list = []
 count = 0
 
-peak_sizes = [6, 5, 7]
 x_offset = 0.0
 
-for pi, peak_n in enumerate(peak_sizes):
-    peak_hue = pi * 0.3
+for peak_idx in range(3):
+    peak_hue = peak_idx * 0.3
     height = 0
 
-    for layer_i in range(peak_n, 0, -1):
-        if count > 285:
+    for layer_i in range(N, 0, -1):
+        if count > 295:
             break
 
-        n_dom = layer_i
-        c1 = colorsys.hsv_to_rgb((peak_hue + layer_i * 0.05) % 1.0, 0.9, 0.95)
-        c2 = colorsys.hsv_to_rgb((peak_hue + 0.15 + layer_i * 0.05) % 1.0, 0.7, 0.85)
+        c1 = colorsys.hsv_to_rgb((peak_hue + layer_i * 0.04) % 1.0, 0.9, 0.95)
+        c2 = colorsys.hsv_to_rgb((peak_hue + 0.15 + layer_i * 0.04) % 1.0, 0.7, 0.85)
 
-        dx_pos = x_offset
-        for j in range(n_dom):
-            is_trigger = (pi == 0 and layer_i == peak_n and j == 0)
-            tilt_y = TILT if is_trigger else 0
+        xp = x_offset
+        for j in range(layer_i):
+            is_first = (peak_idx == 0 and layer_i == N and j == 0)
+            tilt = -5 if is_first else 0
 
-            domino_list.append(f'    <body pos="{dx_pos + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y} 0">')
+            domino_list.append(f'    <body pos="{xp + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 {tilt} 0">')
             domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
             count += 1
 
-            if not is_trigger:
-                domino_list.append(f'    <body pos="{-(dx_pos + dzz - dxx):.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
+            if not is_first:
+                domino_list.append(f'    <body pos="{-(xp + dzz - dxx):.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
                 domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
                 domino_list.append(f'      <freejoint/>')
                 domino_list.append(f'    </body>')
                 count += 1
 
-            dx_pos += (2 * dzz - 2 * dxx)
+            xp += (2 * dzz - 2 * dxx)
 
-        bx_offset = -(dx_pos - (2 * dzz - 2 * dxx)) + 2 * dzz - 2 * dxx
-        bx_pos = bx_offset
+        bx_offset = -(xp - (2 * dzz - 2 * dxx)) + 2 * dzz - 2 * dxx
+        bx = bx_offset
         for j in range(layer_i):
-            domino_list.append(f'    <body pos="{bx_pos:.4f} 0 {height + 2 * dzz + dxx:.4f}" euler="0 90 0">')
+            domino_list.append(f'    <body pos="{bx:.4f} 0 {height + 2 * dzz + dxx:.4f}" euler="0 90 0">')
             domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c2[0]:.3f} {c2[1]:.3f} {c2[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
             count += 1
-            bx_pos += 4 * dzz - 4 * dxx
+            bx += 4 * dzz - 4 * dxx
 
         height += 2 * dzz + 2 * dxx
 
-    x_offset += (peak_n + 1) * (2 * dzz - 2 * dxx) + 0.5
+    x_offset += (N + 1) * (2 * dzz - 2 * dxx) + 0.5
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

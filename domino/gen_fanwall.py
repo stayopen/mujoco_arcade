@@ -14,49 +14,58 @@ HEADER = """<mujoco>
   </asset>
 """
 
-dxx = 0.05
-dyy = 0.12
-dzz = 0.25
-chain_spacing = 2 * dyy + 0.04
-TILT = -8
+dx = 1
+dy = 3
+dz = 10
+scale = 0.1
+dxx = dx * scale
+dyy = dy * scale
+dzz = dz * scale
+
+n_spokes = 5
+per_spoke = 20
+total = n_spokes * per_spoke
 
 domino_list = []
 count = 0
 
-n_spokes = 7
-dominoes_per_spoke = 14
-radius_start = chain_spacing
-
-hue_idx = 0
-total = n_spokes * dominoes_per_spoke + 1
+domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="0 0 0">')
+domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="1.0 0.2 0.2 1"/>')
+domino_list.append(f'      <freejoint/>')
+domino_list.append(f'    </body>')
+count += 1
 
 for si in range(n_spokes):
     angle_deg = si * (360.0 / n_spokes)
     theta = np.radians(angle_deg)
+
+    spoke_len = per_spoke * 1.4
+    t_fine = np.linspace(0, spoke_len, per_spoke * 100)
+    px = t_fine * np.cos(theta)
+    py = t_fine * np.sin(theta)
+
+    ds = np.sqrt(np.gradient(px)**2 + np.gradient(py)**2)
+    L = np.cumsum(ds)
+    Ls = np.linspace(0, L[-1], per_spoke)
+
+    px_f = np.interp(Ls, L, px)
+    py_f = np.interp(Ls, L, py)
+
+    angles = np.arctan2(np.gradient(px_f), np.gradient(py_f))
+
     hue_base = si / n_spokes
 
-    for di in range(dominoes_per_spoke):
-        t = radius_start + di * chain_spacing
-        x = t * np.cos(theta)
-        y = t * np.sin(theta)
-        euler_z = angle_deg + 90
+    for di in range(per_spoke):
+        hue = (hue_base + di * 0.01) % 1.0
+        r, g, b = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+        ad = np.degrees(angles[di]) + 90
+        tilt = -5 if (si == 0 and di == 0) else 0
 
-        hue = hue_base + di * 0.02
-        r, g, b = colorsys.hsv_to_rgb(hue % 1.0, 0.9, 0.95)
-
-        is_first = (si == 0 and di == 0)
-        tilt_x = TILT if is_first else 0
-
-        domino_list.append(f'    <body pos="{x:.4f} {y:.4f} {dzz:.4f}" euler="{tilt_x} 0 {euler_z:.1f}">')
+        domino_list.append(f'    <body pos="{px_f[di]:.4f} {py_f[di]:.4f} {dzz:.4f}" euler="{tilt:.1f} 0 {ad:.1f}">')
         domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')
         domino_list.append(f'    </body>')
         count += 1
-
-        if count > 298:
-            break
-    if count > 298:
-        break
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

@@ -14,45 +14,67 @@ HEADER = """<mujoco>
   </asset>
 """
 
-dxx = 0.05
-dyy = 0.12
-dzz = 0.25
-chain_spacing = 2 * dyy + 0.04
-TILT = -8
+dx = 1
+dy = 3
+dz = 10
+scale = 0.1
+dxx = dx * scale
+dyy = dy * scale
+dzz = dz * scale
+
+N = 200
+seg_len = 5.0
+n_segs = 8
+
+pts_x = [0.0]
+pts_y = [0.0]
+angle = 0.0
+
+for s in range(n_segs):
+    angle += np.pi / 2
+    pts_x.append(pts_x[-1] + seg_len * np.sin(angle))
+    pts_y.append(pts_y[-1] + seg_len * np.cos(angle))
+
+waypoints = list(zip(pts_x, pts_y))
+
+all_px, all_py = [], []
+for i in range(len(waypoints) - 1):
+    x0, y0 = waypoints[i]
+    x1, y1 = waypoints[i + 1]
+    n_pts = 500
+    for j in range(n_pts):
+        t = j / n_pts
+        all_px.append(x0 + t * (x1 - x0))
+        all_py.append(y0 + t * (y1 - y0))
+
+all_px = np.array(all_px)
+all_py = np.array(all_py)
+
+ds = np.sqrt(np.gradient(all_px)**2 + np.gradient(all_py)**2)
+L = np.cumsum(ds)
+Ls = np.linspace(0, L[-1], N)
+
+px_f = np.interp(Ls, L, all_px)
+py_f = np.interp(Ls, L, all_py)
+
+angles = np.arctan2(np.gradient(px_f), np.gradient(py_f))
+
+hues = np.linspace(0, 1, N, endpoint=False)
+colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 
 domino_list = []
 count = 0
 
-segments = 8
-per_segment = 12
+for i in range(N):
+    c = colors[i]
+    ad = np.degrees(angles[i]) + 90
+    tilt = -5 if i == 0 else 0
 
-cx, cy = 0.0, 0.0
-current_dir = 0
-
-for seg_idx in range(segments):
-    dir_rad = np.radians(current_dir)
-    step_x = chain_spacing * np.sin(dir_rad)
-    step_y = chain_spacing * np.cos(dir_rad)
-
-    for di in range(per_segment):
-        if count > 298:
-            break
-
-        hue = (seg_idx + di / per_segment) / segments
-        r, g, b = colorsys.hsv_to_rgb(hue % 1.0, 0.85, 0.92)
-        is_first = (seg_idx == 0 and di == 0)
-        tilt_x = TILT if is_first else 0
-
-        domino_list.append(f'    <body pos="{cx:.4f} {cy:.4f} {dzz:.4f}" euler="{tilt_x} 0 {current_dir:.1f}">')
-        domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
-        domino_list.append(f'      <freejoint/>')
-        domino_list.append(f'    </body>')
-        count += 1
-
-        cx += step_x
-        cy += step_y
-
-    current_dir += 90
+    domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="{tilt:.1f} 0 {ad:.1f}">')
+    domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
+    domino_list.append(f'      <freejoint/>')
+    domino_list.append(f'    </body>')
+    count += 1
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

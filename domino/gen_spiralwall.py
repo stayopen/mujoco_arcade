@@ -14,28 +14,32 @@ HEADER = """<mujoco>
   </asset>
 """
 
-dxx = 0.05
-dyy = 0.12
-dzz = 0.25
-TILT = -8
+dx = 1
+dy = 3
+dz = 10
+scale = 0.1
+dxx = dx * scale
+dyy = dy * scale
+dzz = dz * scale
 
 N = 280
-initial_radius = 0.3
-n_turns = 3
-final_radius = 3.5
+initial_radius = 2
+n_turns = 5
+final_radius = 10
 
 b = (final_radius - initial_radius) / (2 * np.pi * n_turns)
 start_theta = np.pi / 2
 end_theta = 2 * np.pi * n_turns
 
-s = np.linspace(start_theta, end_theta, N)
+s = np.linspace(start_theta, end_theta, N * 10)
 x = (initial_radius + b * s) * np.cos(s)
 y = (initial_radius + b * s) * np.sin(s)
 
-L = np.cumsum(np.sqrt(np.gradient(x) ** 2 + np.gradient(y) ** 2))
+ds = np.sqrt(np.gradient(x)**2 + np.gradient(y)**2)
+L = np.cumsum(ds)
 Ls = np.linspace(0, L[-1], N)
-new_s = np.interp(Ls, L, s)
 
+new_s = np.interp(Ls, L, s)
 x = (initial_radius + b * new_s) * np.cos(new_s)
 y = (initial_radius + b * new_s) * np.sin(new_s)
 
@@ -48,7 +52,7 @@ count = 0
 for i in range(N):
     c = colors[i]
     euler_z = new_s[i] * 180 / np.pi + 90
-    euler_x = TILT if i == 0 else 0
+    euler_x = -5 if i == 0 else 0
 
     domino_list.append(f'    <body pos="{x[i]:.4f} {y[i]:.4f} {dzz:.4f}" euler="{euler_x:.1f} 0 {euler_z:.1f}">')
     domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
