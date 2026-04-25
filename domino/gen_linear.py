@@ -23,12 +23,13 @@ for i in range(N):
     euler_x = 0
     if i == 0:
         euler_x = -5
-    domino = f"""      <body pos="0 {y+dyy} {dzz}" euler="{euler_x} 0 0" >
-         <geom type="box" size="{dyy} {dxx}  {dzz}" rgba="{c[0]} {c[1]} {c[2]} 1"/>
-         <freejoint/>
-        </body>"""
-    domino_list.append(domino)
+    domino_list.append(f'    <body pos="0 {y+dyy} {dzz}" euler="{euler_x} 0 0">')
+    domino_list.append(f'      <geom type="box" size="{dyy} {dxx}  {dzz}" rgba="{c[0]} {c[1]} {c[2]} 1"/>')
+    domino_list.append(f'      <freejoint/>')
+    domino_list.append(f'    </body>')
     y += 2 * dyy
+
+bodies_xml = "\n".join(domino_list)
 
 xml = f"""<mujoco>
   <visual>
@@ -36,20 +37,15 @@ xml = f"""<mujoco>
     <rgba haze="0.15 0.25 0.35 1"/>
     <global azimuth="120" elevation="-20"/>
   </visual>
-
   <asset>
     <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
-    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
-      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
     <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
   </asset>
-
   <worldbody>
     <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
     <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
- 
-      
-{"\n".join(domino_list)}
+{bodies_xml}
   </worldbody>
 </mujoco>
 """
