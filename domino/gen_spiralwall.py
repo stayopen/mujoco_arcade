@@ -22,23 +22,27 @@ dxx = dx * scale
 dyy = dy * scale
 dzz = dz * scale
 
-N = 280
-initial_radius = 2
-n_turns = 5
-final_radius = 10
+target_spacing = 1.4
+
+initial_radius = 3
+n_turns = 6
+final_radius = 14
 
 b = (final_radius - initial_radius) / (2 * np.pi * n_turns)
 start_theta = np.pi / 2
 end_theta = 2 * np.pi * n_turns
 
-s = np.linspace(start_theta, end_theta, N * 10)
+s = np.linspace(start_theta, end_theta, 100000)
 x = (initial_radius + b * s) * np.cos(s)
 y = (initial_radius + b * s) * np.sin(s)
 
 ds = np.sqrt(np.gradient(x)**2 + np.gradient(y)**2)
 L = np.cumsum(ds)
-Ls = np.linspace(0, L[-1], N)
+total_length = L[-1]
 
+N = min(int(total_length / target_spacing), 295)
+
+Ls = np.linspace(0, L[-1], N)
 new_s = np.interp(Ls, L, s)
 x = (initial_radius + b * new_s) * np.cos(new_s)
 y = (initial_radius + b * new_s) * np.sin(new_s)
@@ -71,4 +75,4 @@ xml = f"""{HEADER}  <worldbody>
 
 with open("domino/spiralwall.xml", "w", encoding="utf-8") as f:
     f.write(xml)
-print(f"Wrote spiralwall.xml ({count} blocks)")
+print(f"Wrote spiralwall.xml ({count} blocks, path={total_length:.1f}, spacing={total_length/N:.2f})")
