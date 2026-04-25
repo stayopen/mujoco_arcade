@@ -59,9 +59,9 @@ for si in range(n_spokes):
         hue = (hue_base + di * 0.01) % 1.0
         r, g, b = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
         ad = np.degrees(angles[di]) + 90
-        tilt = -5 if (si == 0 and di == 0) else 0
+        tilt_y = 5 if (si == 0 and di == 0) else 0
 
-        domino_list.append(f'    <body pos="{px_f[di]:.4f} {py_f[di]:.4f} {dzz:.4f}" euler="{tilt:.1f} 0 {ad:.1f}">')
+        domino_list.append(f'    <body pos="{px_f[di]:.4f} {py_f[di]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {ad:.1f}">')
         domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')
         domino_list.append(f'    </body>')

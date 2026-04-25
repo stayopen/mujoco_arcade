@@ -56,9 +56,9 @@ count = 0
 for i in range(N):
     c = colors[i]
     euler_z = new_s[i] * 180 / np.pi + 90
-    euler_x = -5 if i == 0 else 0
+    tilt_y = 5 if i == 0 else 0
 
-    domino_list.append(f'    <body pos="{x[i]:.4f} {y[i]:.4f} {dzz:.4f}" euler="{euler_x:.1f} 0 {euler_z:.1f}">')
+    domino_list.append(f'    <body pos="{x[i]:.4f} {y[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {euler_z:.1f}">')
     domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')
     domino_list.append(f'    </body>')

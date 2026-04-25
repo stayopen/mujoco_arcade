@@ -42,9 +42,9 @@ for peak_idx in range(3):
         xp = x_offset
         for j in range(layer_i):
             is_first = (peak_idx == 0 and layer_i == N and j == 0)
-            tilt = -5 if is_first else 0
+            tilt_y = 5 if is_first else 0
 
-            domino_list.append(f'    <body pos="{xp + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 {tilt} 0">')
+            domino_list.append(f'    <body pos="{xp + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y} 0">')
             domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
@@ -59,7 +59,7 @@ for peak_idx in range(3):
 
             xp += (2 * dzz - 2 * dxx)
 
-        bx_offset = -(xp - (2 * dzz - 2 * dxx)) + 2 * dzz - 2 * dxx
+        bx_offset = -xp + (2 * dzz - 2 * dxx)
         bx = bx_offset
         for j in range(layer_i):
             domino_list.append(f'    <body pos="{bx:.4f} 0 {height + 2 * dzz + dxx:.4f}" euler="0 90 0">')

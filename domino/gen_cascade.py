@@ -53,9 +53,9 @@ count = 0
 for i in range(N):
     c = colors[i]
     angle_deg = np.degrees(angles[i]) + 90
-    tilt = -5 if i == 0 else 0
+    tilt_y = 5 if i == 0 else 0
 
-    domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="{tilt:.1f} 0 {angle_deg:.1f}">')
+    domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {angle_deg:.1f}">')
     domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')
     domino_list.append(f'    </body>')
