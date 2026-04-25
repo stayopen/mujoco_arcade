@@ -1,14 +1,10 @@
-
 import numpy as np
 import colorsys
-
-pin_list = []
 
 N = 400
 dx = 1
 dy = 3
 dz = 10
-
 scale = 0.1
 
 hues = np.linspace(0, 1, N, endpoint=False)
@@ -18,25 +14,22 @@ initial_radius = 2
 n_turns = 10
 final_radius = 16
 
-b = (final_radius - initial_radius)/(2*np.pi*n_turns)
+b = (final_radius - initial_radius) / (2 * np.pi * n_turns)
 
-start_theta = np.pi/2
-end_theta = 2*np.pi*n_turns
+start_theta = np.pi / 2
+end_theta = 2 * np.pi * n_turns
 
 s = np.linspace(start_theta, end_theta, N)
-x = (initial_radius + b*s)*np.cos(s)
-y = (initial_radius + b*s)*np.sin(s)
+x = (initial_radius + b * s) * np.cos(s)
+y = (initial_radius + b * s) * np.sin(s)
 
-# Calculate the arc length
-L = np.cumsum(np.sqrt(np.gradient(x)**2 + np.gradient(y)**2))
+L = np.cumsum(np.sqrt(np.gradient(x) ** 2 + np.gradient(y) ** 2))
 Ls = np.linspace(0, L[-1], N)
 
-# Find s values for equally spaced arc lengths
 new_s = np.interp(Ls, L, s)
 
-# Calculate x and y for equally spaced arc lengths
-x = (initial_radius + b*new_s)*np.cos(new_s)
-y = (initial_radius + b*new_s)*np.sin(new_s)
+x = (initial_radius + b * new_s) * np.cos(new_s)
+y = (initial_radius + b * new_s) * np.sin(new_s)
 
 domino_list = []
 
@@ -46,14 +39,13 @@ for i in range(N):
     dzz = dz * scale
     c = colors[i]
     euler_x = 0
-    if i == N-1:
+    if i == N - 1:
         euler_x = 25
     domino = f"""    <body pos="{x[i]} {y[i]} {dzz}" euler="{euler_x} 0 {new_s[i]* 180/np.pi + 90}" >
          <geom type="box" size="{dxx} {dyy}  {dzz}" rgba="{c[0]} {c[1]} {c[2]} 1"/>
          <freejoint/>
         </body>"""
     domino_list.append(domino)
- 
 
 xml = f"""<mujoco>
   <visual>
@@ -79,7 +71,6 @@ xml = f"""<mujoco>
 </mujoco>
 """
 
- 
 with open("domino/domino2.xml", "w", encoding="utf-8") as f:
     f.write(xml)
 print("Wrote domino2.xml")

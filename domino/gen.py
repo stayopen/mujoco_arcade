@@ -1,10 +1,9 @@
-
 dz = 0
 body_layers = []
-for i in range(3):
 
-    dy =0.05
-    body_layer=f"""<body pos="0 0 {dz + .1}">
+for i in range(3):
+    dy = 0.05
+    body_layer = f"""<body pos="0 0 {dz + .1}">
     <freejoint />
             <geom type="box" size=".01 {dy} 0.1" rgba="0.4 .9 09 1"/>
         </body>
@@ -51,12 +50,10 @@ for i in range(3):
         <geom type="box" size=".105 {dy} .01" rgba="0.9 .4 09 1"/>
     </body>"""
 
-    dz = dz + 0.22
+    dz += 0.22
     body_layers.append(body_layer)
 
-
 bodies_xml = "\n".join(body_layers)
-
 
 xml = f"""<mujoco>
 <!-- <option gravity="0 0 0" /> -->
@@ -80,7 +77,6 @@ xml = f"""<mujoco>
 </worldbody>
 </mujoco>"""
 
- 
 with open("domino/domino_tower.xml", "w", encoding="utf-8") as f:
     f.write(xml)
 print("Wrote domino_tower.xml")

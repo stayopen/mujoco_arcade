@@ -1,16 +1,12 @@
-
 import numpy as np
 import colorsys
-
 
 layer = 20
 dx = 1
 dy = 6
 dz = 3
-
 scale = 0.1
 
- 
 N = layer
 domino_list = []
 height = 0
@@ -18,12 +14,7 @@ for i in range(N):
     dxx = dx * scale
     dyy = dy * scale
     dzz = dz * scale
-    color1 = (144/255., 213/255. , 1)
-   
-   
-    euler_x = 0
-    # if i == N-1:
-    #     euler_x = 25
+    color1 = (144 / 255., 213 / 255., 1)
 
     domino = f"""
         <body pos="0 0 {dzz + height}" euler="0 0 0" >
@@ -46,8 +37,7 @@ for i in range(N):
         
         """
     domino_list.append(domino)
-    height += 4* dzz
- 
+    height += 4 * dzz
 
 xml = f"""<mujoco>
   <visual>
@@ -73,7 +63,6 @@ xml = f"""<mujoco>
 </mujoco>
 """
 
- 
 with open("domino/domino1x1tower.xml", "w", encoding="utf-8") as f:
     f.write(xml)
 print("Wrote domino1x1tower.xml")

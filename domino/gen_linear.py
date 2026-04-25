@@ -1,15 +1,12 @@
-
 import numpy as np
 import colorsys
-
-pin_list = []
 
 N = 50
 dx = 0.2
 dy = 3
 dz = 6
 
-start  = 1
+start = 1
 end = 100
 ratios = np.logspace(np.log10(start), np.log10(end), N)
 scale = 0.01
@@ -21,7 +18,7 @@ y = 0
 for i in range(N):
     dxx = dx * ratios[i] * scale
     dyy = dy * ratios[i] * scale
-    dzz = dz * ratios[i] * scale 
+    dzz = dz * ratios[i] * scale
     c = colors[i]
     euler_x = 0
     if i == 0:
@@ -31,10 +28,7 @@ for i in range(N):
          <freejoint/>
         </body>"""
     domino_list.append(domino)
-    y+= 2* dyy
- 
-
- 
+    y += 2 * dyy
 
 xml = f"""<mujoco>
   <visual>
@@ -60,7 +54,6 @@ xml = f"""<mujoco>
 </mujoco>
 """
 
- 
 with open("domino/domino1.xml", "w", encoding="utf-8") as f:
     f.write(xml)
 print("Wrote domino1.xml")

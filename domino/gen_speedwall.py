@@ -1,16 +1,12 @@
-# inspired by 
 import numpy as np
 import colorsys
-
 
 layer = 10
 dx = 1
 dy = 3
 dz = 6
-
 scale = 0.1
 
- 
 N = layer
 domino_list = []
 height = 0
@@ -18,10 +14,8 @@ for i in range(N, 0, -1):
     dxx = dx * scale
     dyy = dy * scale
     dzz = dz * scale
-    color1 = (144/255., 213/255. , 1)
-   
-    color2 = (255/255., 213/255. , 133/255.)
-    euler_x = 0
+    color1 = (144 / 255., 213 / 255., 1)
+    color2 = (255 / 255., 213 / 255., 133 / 255.)
 
     x_offset = 0
     for j in range(i):
@@ -60,7 +54,7 @@ for i in range(N, 0, -1):
                 """
             domino_list.append(domino)
 
-        x_offset = x_offset + (2*dzz - 2*dxx)  
+        x_offset = x_offset + (2*dzz - 2*dxx)
 
     x_offset = - x_offset + 2*dzz - 2*dxx
     for j in range(i):
@@ -72,10 +66,9 @@ for i in range(N, 0, -1):
         
         """
         domino_list.append(domino)
-        x_offset = x_offset + 4 * dzz - 4*dxx 
+        x_offset = x_offset + 4 * dzz - 4*dxx
 
     height += 2*dzz + 2*dxx
- 
 
 xml = f"""<mujoco>
   <visual>
@@ -101,7 +94,6 @@ xml = f"""<mujoco>
 </mujoco>
 """
 
- 
 with open("domino/speedwall.xml", "w", encoding="utf-8") as f:
     f.write(xml)
 print("Write speedwall.xml")
