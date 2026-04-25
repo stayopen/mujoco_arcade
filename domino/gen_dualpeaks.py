@@ -14,14 +14,15 @@ HEADER = """<mujoco>
   </asset>
 """
 
-dxx = 0.05
-dyy = 0.12
-dzz = 0.25
+dxx = 0.1
+dyy = 0.3
+dzz = 0.6
+TILT = -8
 
 domino_list = []
 count = 0
 
-peak_sizes = [7, 5, 8]
+peak_sizes = [6, 5, 7]
 x_offset = 0.0
 
 for pi, peak_n in enumerate(peak_sizes):
@@ -29,7 +30,7 @@ for pi, peak_n in enumerate(peak_sizes):
     height = 0
 
     for layer_i in range(peak_n, 0, -1):
-        if count > 295:
+        if count > 285:
             break
 
         n_dom = layer_i
@@ -38,15 +39,16 @@ for pi, peak_n in enumerate(peak_sizes):
 
         dx_pos = x_offset
         for j in range(n_dom):
-            domino_list.append(f'    <body pos="{dx_pos + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
+            is_trigger = (pi == 0 and layer_i == peak_n and j == 0)
+            tilt_y = TILT if is_trigger else 0
+
+            domino_list.append(f'    <body pos="{dx_pos + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y} 0">')
             domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
             count += 1
 
-            if layer_i == peak_sizes[pi] and j == 0 and pi == 0 and layer_i == peak_n:
-                pass
-            elif n_dom > 1 or j > 0:
+            if not is_trigger:
                 domino_list.append(f'    <body pos="{-(dx_pos + dzz - dxx):.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
                 domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
                 domino_list.append(f'      <freejoint/>')
@@ -54,13 +56,6 @@ for pi, peak_n in enumerate(peak_sizes):
                 count += 1
 
             dx_pos += (2 * dzz - 2 * dxx)
-
-        if layer_i == peak_n and pi == 0:
-            domino_list.append(f'    <body pos="0 0 {dzz + height:.4f}" euler="0 {-8} 0">')
-            domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="1.0 0.15 0.15 1"/>')
-            domino_list.append(f'      <freejoint/>')
-            domino_list.append(f'    </body>')
-            count += 1
 
         bx_offset = -(dx_pos - (2 * dzz - 2 * dxx)) + 2 * dzz - 2 * dxx
         bx_pos = bx_offset
@@ -74,7 +69,7 @@ for pi, peak_n in enumerate(peak_sizes):
 
         height += 2 * dzz + 2 * dxx
 
-    x_offset += (peak_n + 1) * (2 * dzz - 2 * dxx) + 0.3
+    x_offset += (peak_n + 1) * (2 * dzz - 2 * dxx) + 0.5
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

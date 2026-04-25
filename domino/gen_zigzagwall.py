@@ -17,43 +17,33 @@ HEADER = """<mujoco>
 dxx = 0.05
 dyy = 0.12
 dzz = 0.25
-domino_spacing = 2 * dyy + 0.03
-row_width = 8
+chain_spacing = 2 * dyy + 0.04
+TILT = -8
 
 domino_list = []
 count = 0
 
 segments = 8
+per_segment = 12
 
-cx, cy = 0.0, -0.5
+cx, cy = 0.0, 0.0
 current_dir = 0
 
-domino_list.append(f'    <body pos="{cx:.4f} {cy:.4f} {dzz:.4f}" euler="0 0 -8">')
-domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="1.0 0.15 0.15 1"/>')
-domino_list.append(f'      <freejoint/>')
-domino_list.append(f'    </body>')
-count += 1
-
-cy += domino_spacing
-
 for seg_idx in range(segments):
-    if count > 280:
-        break
+    dir_rad = np.radians(current_dir)
+    step_x = chain_spacing * np.sin(dir_rad)
+    step_y = chain_spacing * np.cos(dir_rad)
 
-    n_dominoes = 12
-    dir_angle = current_dir
-    dir_rad = np.radians(dir_angle)
-    step_x = domino_spacing * np.sin(dir_rad)
-    step_y = domino_spacing * np.cos(dir_rad)
-
-    hue = seg_idx / segments
-    r, g, b = colorsys.hsv_to_rgb(hue, 0.85, 0.92)
-
-    for di in range(n_dominoes):
+    for di in range(per_segment):
         if count > 298:
             break
 
-        domino_list.append(f'    <body pos="{cx:.4f} {cy:.4f} {dzz:.4f}" euler="0 0 {dir_angle:.1f}">')
+        hue = (seg_idx + di / per_segment) / segments
+        r, g, b = colorsys.hsv_to_rgb(hue % 1.0, 0.85, 0.92)
+        is_first = (seg_idx == 0 and di == 0)
+        tilt_x = TILT if is_first else 0
+
+        domino_list.append(f'    <body pos="{cx:.4f} {cy:.4f} {dzz:.4f}" euler="{tilt_x} 0 {current_dir:.1f}">')
         domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')
         domino_list.append(f'    </body>')
@@ -62,15 +52,7 @@ for seg_idx in range(segments):
         cx += step_x
         cy += step_y
 
-    corner_x = cx - step_x
-    corner_y = cy - step_y
-
     current_dir += 90
-    dir_rad = np.radians(current_dir)
-    step_x = domino_spacing * np.sin(dir_rad)
-    step_y = domino_spacing * np.cos(dir_rad)
-    cx = corner_x + step_x
-    cy = corner_y + step_y
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

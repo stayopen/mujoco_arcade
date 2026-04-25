@@ -17,47 +17,37 @@ HEADER = """<mujoco>
 dxx = 0.05
 dyy = 0.12
 dzz = 0.25
-chain_spacing = 2 * dyy + 0.03
+chain_spacing = 2 * dyy + 0.04
+TILT = -8
 
 domino_list = []
 count = 0
 
 n_spokes = 7
-dominoes_per_spoke = 15
-radius_start = 0.25
+dominoes_per_spoke = 14
+radius_start = chain_spacing
 
-domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="{-8} 0 0">')
-domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="1.0 0.15 0.15 1"/>')
-domino_list.append(f'      <freejoint/>')
-domino_list.append(f'    </body>')
-count += 1
-
-domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="0 0 0">')
-domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="1.0 0.15 0.15 1"/>')
-domino_list.append(f'      <freejoint/>')
-domino_list.append(f'    </body>')
-count += 1
+hue_idx = 0
+total = n_spokes * dominoes_per_spoke + 1
 
 for si in range(n_spokes):
-    angle = si * (360.0 / n_spokes)
-    theta = np.radians(angle)
-    hue = si / n_spokes
-    r, g, b = colorsys.hsv_to_rgb(hue, 0.9, 0.95)
-
-    prev_x, prev_y = 0.0, 0.0
+    angle_deg = si * (360.0 / n_spokes)
+    theta = np.radians(angle_deg)
+    hue_base = si / n_spokes
 
     for di in range(dominoes_per_spoke):
         t = radius_start + di * chain_spacing
         x = t * np.cos(theta)
         y = t * np.sin(theta)
+        euler_z = angle_deg + 90
 
-        is_trigger = (di == 0 and si == 0)
-        euler_z = angle + 90
+        hue = hue_base + di * 0.02
+        r, g, b = colorsys.hsv_to_rgb(hue % 1.0, 0.9, 0.95)
 
-        if is_trigger:
-            continue
+        is_first = (si == 0 and di == 0)
+        tilt_x = TILT if is_first else 0
 
-        domino_list.append(f'    <body pos="{x:.4f} {y:.4f} {dzz:.4f}" euler="0 0 {euler_z:.1f}">')
+        domino_list.append(f'    <body pos="{x:.4f} {y:.4f} {dzz:.4f}" euler="{tilt_x} 0 {euler_z:.1f}">')
         domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')
         domino_list.append(f'    </body>')
