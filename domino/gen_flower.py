@@ -3,27 +3,15 @@ import colorsys
 from domino_util import write_path_xml
 
 n_petals = 6
-petal_len = 3.5
-petal_arc = np.pi / 4
+inner_r = 1.5
+petal_len = 3.0
 
-px_all = []
-py_all = []
-colors_all = []
+t = np.linspace(0, 1.85 * np.pi, 120000)
+r = inner_r + petal_len * (0.5 + 0.5 * np.sin(n_petals * t))
+px = r * np.cos(t)
+py = r * np.sin(t)
 
-for p in range(n_petals):
-    base_angle = p * (2 * np.pi / n_petals)
-    t = np.linspace(0, 1, 5000)
-    r = 1.0 + petal_len * t
-    arc = petal_arc * (t - 0.5)
-    angle = base_angle + arc
-    px = r * np.cos(angle)
-    py = r * np.sin(angle)
-    
-    hue = p / n_petals
-    c = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
-    for i in range(len(px)):
-        px_all.append(px[i])
-        py_all.append(py[i])
-        colors_all.append(c)
+hues = np.linspace(0, 1, len(px), endpoint=False)
+colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 
-write_path_xml("domino/flower.xml", px_all, py_all, colors=colors_all)
+write_path_xml("domino/flower.xml", px, py, colors=colors, chain_spacing=0.75)

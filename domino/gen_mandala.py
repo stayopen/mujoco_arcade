@@ -13,4 +13,4 @@ py = r * np.sin(t)
 hues = np.linspace(0, 1, len(px), endpoint=False)
 colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 
-write_path_xml("domino/mandala.xml", px, py, colors=colors)
+write_path_xml("domino/mandala.xml", px, py, colors=colors, chain_spacing=0.75)

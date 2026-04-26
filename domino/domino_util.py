@@ -20,49 +20,95 @@ SCALE = 0.1
 DXX = round(DX * SCALE, 4)
 DYY = round(DY * SCALE, 4)
 DZZ = round(DZ * SCALE, 4)
+DEFAULT_CHAIN_SPACING = 0.75
+MAX_BLOCKS = 300
 
 
-def write_path_xml(filename, px, py, pz=None, colors=None, tilt=15, min_dist=0.65):
+def _resample_chain(px, py, pz, spacing, max_blocks):
+    points = np.column_stack([px, py, pz]).astype(float)
+    finite = np.all(np.isfinite(points), axis=1)
+    points = points[finite]
+    if len(points) < 2:
+        raise ValueError("A domino chain needs at least two finite points")
+
+    seg = np.linalg.norm(np.diff(points, axis=0), axis=1)
+    keep = np.concatenate([[True], seg > 1e-9])
+    points = points[keep]
+    if len(points) < 2:
+        raise ValueError("A domino chain needs at least two distinct points")
+
+    seg = np.linalg.norm(np.diff(points, axis=0), axis=1)
+    distance = np.concatenate([[0.0], np.cumsum(seg)])
+    total = distance[-1]
+    sample_count = min(max_blocks, int(total / spacing) + 1)
+    sample_at = np.arange(sample_count) * spacing
+
+    chain = np.column_stack(
+        [np.interp(sample_at, distance, points[:, axis]) for axis in range(3)]
+    )
+    return chain
+
+
+def _resample_colors(colors, count):
+    if colors is None:
+        import colorsys
+        hues = np.linspace(0, 1, count, endpoint=False)
+        return [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
+
+    colors = np.asarray(colors, dtype=float)
+    if len(colors) == count:
+        return colors
+    if len(colors) == 1:
+        return np.repeat(colors, count, axis=0)
+
+    source_at = np.linspace(0, len(colors) - 1, count)
+    lo = np.floor(source_at).astype(int)
+    hi = np.ceil(source_at).astype(int)
+    weight = (source_at - lo)[:, None]
+    return colors[lo] * (1 - weight) + colors[hi] * weight
+
+
+def write_path_xml(
+    filename,
+    px,
+    py,
+    pz=None,
+    colors=None,
+    tilt=28,
+    min_dist=DEFAULT_CHAIN_SPACING,
+    chain_spacing=None,
+    max_blocks=MAX_BLOCKS,
+):
     px = np.asarray(px)
     py = np.asarray(py)
     if pz is None:
-        pz = np.full_like(px, DZZ)
+        pz = np.full_like(px, DZZ, dtype=float)
     else:
         pz = np.asarray(pz)
 
-    kept_x = [px[0]]
-    kept_y = [py[0]]
-    kept_z = [pz[0]]
-    for i in range(1, len(px)):
-        dx_i = px[i] - np.array(kept_x)
-        dy_i = py[i] - np.array(kept_y)
-        dz_i = pz[i] - np.array(kept_z)
-        if np.min(np.hypot(np.hypot(dx_i, dy_i), dz_i)) >= min_dist:
-            kept_x.append(px[i])
-            kept_y.append(py[i])
-            kept_z.append(pz[i])
-        if len(kept_x) >= 300:
-            break
+    spacing = chain_spacing if chain_spacing is not None else min_dist
+    chain = _resample_chain(px, py, pz, spacing, max_blocks)
+    kx = chain[:, 0]
+    ky = chain[:, 1]
+    kz = chain[:, 2]
+    N = len(chain)
 
-    kx = np.array(kept_x)
-    ky = np.array(kept_y)
-    kz = np.array(kept_z)
-    N = len(kept_x)
-    angles = np.arctan2(np.gradient(ky), np.gradient(kx))
-
-    if colors is None:
-        import colorsys
-        hues = np.linspace(0, 1, N, endpoint=False)
-        colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
-    else:
-        colors = colors[:N]
+    directions = np.diff(chain[:, :2], axis=0)
+    directions = np.vstack([directions, directions[-1]])
+    angles = np.arctan2(directions[:, 1], directions[:, 0])
+    colors = _resample_colors(colors, N)
 
     domino_list = []
     for i in range(N):
         c = colors[i]
         euler_z = np.degrees(angles[i])
         tilt_y = tilt if i == 0 else 0
-        domino_list.append(f'    <body pos="{kx[i]:.4f} {ky[i]:.4f} {kz[i]:.4f}" euler="0 {tilt_y:.1f} {euler_z:.1f}">')
+        center_z = kz[i]
+        if i == 0 and tilt_y:
+            theta = np.radians(abs(tilt_y))
+            center_z += DZZ * np.cos(theta) + DXX * np.sin(theta) - DZZ
+        name = "trigger" if i == 0 else f"domino_{i:03d}"
+        domino_list.append(f'    <body name="{name}" pos="{kx[i]:.4f} {ky[i]:.4f} {center_z:.4f}" euler="0 {tilt_y:.1f} {euler_z:.1f}">')
         domino_list.append(f'      <geom type="box" size="{DXX:.4f} {DYY:.4f} {DZZ:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')
         domino_list.append(f'    </body>')
@@ -77,4 +123,4 @@ def write_path_xml(filename, px, py, pz=None, colors=None, tilt=15, min_dist=0.6
 """
     with open(filename, "w", encoding="utf-8") as f:
         f.write(xml)
-    print(f"Wrote {filename} ({N} blocks)")
+    print(f"Wrote {filename} ({N} chain blocks, spacing={spacing:.2f})")
