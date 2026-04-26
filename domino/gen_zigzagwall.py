@@ -18,46 +18,31 @@ dx = 1
 dy = 3
 dz = 10
 scale = 0.1
-dxx = dx * scale
-dyy = dy * scale
-dzz = dz * scale
+dxx = round(dx * scale, 4)
+dyy = round(dy * scale, 4)
+dzz = round(dz * scale, 4)
 
-N = 200
-seg_len = 5.0
-n_segs = 8
+# Smooth zigzag using a gentle sine wave
+amplitude = 1.5
+wavelength = 12.0
+n_waves = 5
 
-pts_x = [0.0]
-pts_y = [0.0]
-angle = 0.0
+t = np.linspace(0, n_waves * wavelength, 50000)
+px = amplitude * np.sin(2 * np.pi * t / wavelength)
+py = t
 
-for s in range(n_segs):
-    angle += np.pi / 2
-    pts_x.append(pts_x[-1] + seg_len * np.sin(angle))
-    pts_y.append(pts_y[-1] + seg_len * np.cos(angle))
-
-waypoints = list(zip(pts_x, pts_y))
-
-all_px, all_py = [], []
-for i in range(len(waypoints) - 1):
-    x0, y0 = waypoints[i]
-    x1, y1 = waypoints[i + 1]
-    n_pts = 500
-    for j in range(n_pts):
-        t = j / n_pts
-        all_px.append(x0 + t * (x1 - x0))
-        all_py.append(y0 + t * (y1 - y0))
-
-all_px = np.array(all_px)
-all_py = np.array(all_py)
-
-ds = np.sqrt(np.gradient(all_px)**2 + np.gradient(all_py)**2)
+ds = np.sqrt(np.gradient(px)**2 + np.gradient(py)**2)
 L = np.cumsum(ds)
+total_length = L[-1]
+
+target_spacing = 0.55
+N = int(total_length / target_spacing)
+
 Ls = np.linspace(0, L[-1], N)
+px_f = np.interp(Ls, L, px)
+py_f = np.interp(Ls, L, py)
 
-px_f = np.interp(Ls, L, all_px)
-py_f = np.interp(Ls, L, all_py)
-
-angles = np.arctan2(np.gradient(px_f), np.gradient(py_f))
+angles = np.arctan2(np.gradient(py_f), np.gradient(px_f))
 
 hues = np.linspace(0, 1, N, endpoint=False)
 colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
@@ -65,13 +50,14 @@ colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 domino_list = []
 count = 0
 
+# Single-row zigzag wall (kept under 300 blocks)
 for i in range(N):
     c = colors[i]
-    ad = np.degrees(angles[i]) + 90
+    ad = np.degrees(angles[i])
     tilt_y = 5 if i == 0 else 0
 
     domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {ad:.1f}">')
-    domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
+    domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')
     domino_list.append(f'    </body>')
     count += 1

@@ -18,60 +18,64 @@ dx = 1
 dy = 3
 dz = 6
 scale = 0.1
-dxx = dx * scale
-dyy = dy * scale
-dzz = dz * scale
+dxx = round(dx * scale, 4)
+dyy = round(dy * scale, 4)
+dzz = round(dz * scale, 4)
 
-N = 10
+step = 2 * dzz - 2 * dxx
+cross_step = 4 * dzz - 4 * dxx
+
+N = 8
+# Space peaks so they don't overlap (each peak spans ~N*step + dzz on each side)
+peak_spacing = 2 * N * step + 2.0
+
 domino_list = []
 count = 0
 
-x_offset = 0.0
-
-for peak_idx in range(3):
-    peak_hue = peak_idx * 0.3
+for peak_idx in range(2):
+    cx = (peak_idx - 0.5) * peak_spacing
+    hue_base = peak_idx * 0.3
     height = 0
 
     for layer_i in range(N, 0, -1):
-        if count > 295:
+        if count > 400:
             break
 
-        c1 = colorsys.hsv_to_rgb((peak_hue + layer_i * 0.04) % 1.0, 0.9, 0.95)
-        c2 = colorsys.hsv_to_rgb((peak_hue + 0.15 + layer_i * 0.04) % 1.0, 0.7, 0.85)
+        c1 = colorsys.hsv_to_rgb((hue_base + (N - layer_i) * 0.04) % 1.0, 0.9, 0.95)
+        c2 = colorsys.hsv_to_rgb((hue_base + 0.15 + (N - layer_i) * 0.04) % 1.0, 0.7, 0.85)
 
-        xp = x_offset
+        # Vertical pillars
+        x_offset = 0
         for j in range(layer_i):
             is_first = (peak_idx == 0 and layer_i == N and j == 0)
             tilt_y = 5 if is_first else 0
+            px = cx + x_offset + dzz - dxx
 
-            domino_list.append(f'    <body pos="{xp + dzz - dxx:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y} 0">')
-            domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
+            domino_list.append(f'    <body pos="{px:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y:.1f} 0">')
+            domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
             count += 1
 
-            if not is_first:
-                domino_list.append(f'    <body pos="{-(xp + dzz - dxx):.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
-                domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
-                domino_list.append(f'      <freejoint/>')
-                domino_list.append(f'    </body>')
-                count += 1
+            domino_list.append(f'    <body pos="{cx - (x_offset + dzz - dxx):.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
+            domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
+            domino_list.append(f'      <freejoint/>')
+            domino_list.append(f'    </body>')
+            count += 1
 
-            xp += (2 * dzz - 2 * dxx)
+            x_offset += step
 
-        bx_offset = -xp + (2 * dzz - 2 * dxx)
-        bx = bx_offset
+        # Cross pieces on top of this layer
+        bx = cx - x_offset + step
         for j in range(layer_i):
             domino_list.append(f'    <body pos="{bx:.4f} 0 {height + 2 * dzz + dxx:.4f}" euler="0 90 0">')
-            domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c2[0]:.3f} {c2[1]:.3f} {c2[2]:.3f} 1"/>')
+            domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c2[0]:.3f} {c2[1]:.3f} {c2[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
             count += 1
-            bx += 4 * dzz - 4 * dxx
+            bx += cross_step
 
         height += 2 * dzz + 2 * dxx
-
-    x_offset += (N + 1) * (2 * dzz - 2 * dxx) + 0.5
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

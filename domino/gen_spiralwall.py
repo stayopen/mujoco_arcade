@@ -18,14 +18,14 @@ dx = 1
 dy = 3
 dz = 10
 scale = 0.1
-dxx = dx * scale
-dyy = dy * scale
-dzz = dz * scale
+dxx = round(dx * scale, 4)
+dyy = round(dy * scale, 4)
+dzz = round(dz * scale, 4)
 
-target_spacing = 1.4
+target_spacing = 0.4
 
 initial_radius = 3
-n_turns = 6
+n_turns = 2
 final_radius = 14
 
 b = (final_radius - initial_radius) / (2 * np.pi * n_turns)
@@ -40,12 +40,15 @@ ds = np.sqrt(np.gradient(x)**2 + np.gradient(y)**2)
 L = np.cumsum(ds)
 total_length = L[-1]
 
-N = min(int(total_length / target_spacing), 295)
+N = int(total_length / target_spacing)
 
 Ls = np.linspace(0, L[-1], N)
 new_s = np.interp(Ls, L, s)
 x = (initial_radius + b * new_s) * np.cos(new_s)
 y = (initial_radius + b * new_s) * np.sin(new_s)
+
+# Tangent angles
+angles = new_s + np.pi / 2  # perpendicular to radial direction
 
 hues = np.linspace(0, 1, N, endpoint=False)
 colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
@@ -53,16 +56,18 @@ colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
 domino_list = []
 count = 0
 
+# Single-row spiral wall (kept under 300 blocks)
 for i in range(N):
     c = colors[i]
-    euler_z = new_s[i] * 180 / np.pi + 90
+    euler_z = np.degrees(angles[i])
     tilt_y = 5 if i == 0 else 0
 
     domino_list.append(f'    <body pos="{x[i]:.4f} {y[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {euler_z:.1f}">')
-    domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
+    domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')
     domino_list.append(f'    </body>')
     count += 1
+
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

@@ -18,15 +18,15 @@ dx = 1
 dy = 3
 dz = 10
 scale = 0.1
-dxx = dx * scale
-dyy = dy * scale
-dzz = dz * scale
+dxx = round(dx * scale, 4)
+dyy = round(dy * scale, 4)
+dzz = round(dz * scale, 4)
 
-target_spacing = 1.4
+target_spacing = 0.5  # realistic cascade spacing for 1m tall dominoes
 
 amplitude = 8.0
 wavelength = 30.0
-n_waves = 5
+n_waves = 3
 
 t = np.linspace(0, n_waves * wavelength, 50000)
 px = amplitude * np.sin(2 * np.pi * t / wavelength)
@@ -36,13 +36,13 @@ ds = np.sqrt(np.gradient(px)**2 + np.gradient(py)**2)
 L = np.cumsum(ds)
 total_length = L[-1]
 
-N = min(int(total_length / target_spacing), 295)
+N = min(int(total_length / target_spacing), 300)
 
 Ls = np.linspace(0, L[-1], N)
 px_f = np.interp(Ls, L, px)
 py_f = np.interp(Ls, L, py)
 
-angles = np.arctan2(np.gradient(px_f), np.gradient(py_f))
+angles = np.arctan2(np.gradient(py_f), np.gradient(px_f))
 
 hues = np.linspace(0, 1, N, endpoint=False)
 colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
@@ -52,11 +52,11 @@ count = 0
 
 for i in range(N):
     c = colors[i]
-    angle_deg = np.degrees(angles[i]) + 90
+    angle_deg = np.degrees(angles[i])
     tilt_y = 5 if i == 0 else 0
 
     domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {angle_deg:.1f}">')
-    domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
+    domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')
     domino_list.append(f'    </body>')
     count += 1

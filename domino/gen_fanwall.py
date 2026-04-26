@@ -18,19 +18,20 @@ dx = 1
 dy = 3
 dz = 10
 scale = 0.1
-dxx = dx * scale
-dyy = dy * scale
-dzz = dz * scale
+dxx = round(dx * scale, 4)
+dyy = round(dy * scale, 4)
+dzz = round(dz * scale, 4)
 
 n_spokes = 5
 per_spoke = 20
-total = n_spokes * per_spoke
+spoke_spacing = 0.4
 
 domino_list = []
 count = 0
 
-domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="0 0 0">')
-domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="1.0 0.2 0.2 1"/>')
+# Central starter domino
+domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="0 5.0 0">')
+domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="1.0 0.2 0.2 1"/>')
 domino_list.append(f'      <freejoint/>')
 domino_list.append(f'    </body>')
 count += 1
@@ -39,8 +40,9 @@ for si in range(n_spokes):
     angle_deg = si * (360.0 / n_spokes)
     theta = np.radians(angle_deg)
 
-    spoke_len = per_spoke * 1.4
-    t_fine = np.linspace(0, spoke_len, per_spoke * 100)
+    spoke_len = per_spoke * spoke_spacing + 2 * dyy
+    # Start t from 2*dyy so spokes don't overlap near the center
+    t_fine = np.linspace(2 * dyy, spoke_len, per_spoke * 100)
     px = t_fine * np.cos(theta)
     py = t_fine * np.sin(theta)
 
@@ -51,18 +53,31 @@ for si in range(n_spokes):
     px_f = np.interp(Ls, L, px)
     py_f = np.interp(Ls, L, py)
 
-    angles = np.arctan2(np.gradient(px_f), np.gradient(py_f))
+    angles = np.arctan2(np.gradient(py_f), np.gradient(px_f))
 
     hue_base = si / n_spokes
 
     for di in range(per_spoke):
         hue = (hue_base + di * 0.01) % 1.0
         r, g, b = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
-        ad = np.degrees(angles[di]) + 90
-        tilt_y = 5 if (si == 0 and di == 0) else 0
+        ad = np.degrees(angles[di])
 
-        domino_list.append(f'    <body pos="{px_f[di]:.4f} {py_f[di]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {ad:.1f}">')
-        domino_list.append(f'      <geom type="box" size="{dxx} {dyy} {dzz}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
+        domino_list.append(f'    <body pos="{px_f[di]:.4f} {py_f[di]:.4f} {dzz:.4f}" euler="0 0.0 {ad:.1f}">')
+        domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
+        domino_list.append(f'      <freejoint/>')
+        domino_list.append(f'    </body>')
+        count += 1
+
+    # Second parallel row offset sideways (perpendicular to spoke)
+    offset = 2 * dyy
+    px2 = px_f - offset * np.sin(theta)
+    py2 = py_f + offset * np.cos(theta)
+    for di in range(per_spoke):
+        hue = (hue_base + di * 0.01 + 0.5) % 1.0
+        r, g, b = colorsys.hsv_to_rgb(hue, 0.8, 0.9)
+        ad = np.degrees(angles[di])
+        domino_list.append(f'    <body pos="{px2[di]:.4f} {py2[di]:.4f} {dzz:.4f}" euler="0 0.0 {ad:.1f}">')
+        domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{r:.3f} {g:.3f} {b:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')
         domino_list.append(f'    </body>')
         count += 1
