@@ -1,0 +1,276 @@
+<mujoco>
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="120" elevation="-20"/>
+  </visual>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
+  </asset>
+  <worldbody>
+    <light pos="0 0 1.5" dir="0 0 -1" directional="true"/>
+    <geom name="floor" size="0 0 0.05" type="plane" material="groundplane"/>
+    <body pos="0.0000 0.0000 0.6000" euler="0 10.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.4725 0.2970 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.092 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.9450 0.5940 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.185 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.4175 0.8910 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.277 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.8900 1.1880 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.369 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.3625 1.4850 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.462 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.8350 1.7820 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.554 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.3075 2.0790 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.646 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.7800 2.3760 0.6000" euler="0 0.0 77.7">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.738 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.4750 2.8490 0.6000" euler="0 0.0 153.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.831 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.9150 2.8020 0.6000" euler="0 0.0 -161.6">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.923 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.4425 2.5050 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.985 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.9700 2.2080 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.892 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.4975 1.9110 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.800 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.0250 1.6140 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.708 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.5525 1.3170 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.615 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.0800 1.0200 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.523 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-0.3925 0.7230 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.431 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-0.8650 0.4260 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.338 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.3375 0.1290 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.246 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.8100 -0.1680 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.154 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-2.2825 -0.4650 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.062 1.000 0.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-2.7550 -0.7620 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.031 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.2275 -1.0590 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.123 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.7000 -1.3560 0.6000" euler="0 0.0 -108.0">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.215 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.4925 -1.8730 0.6000" euler="0 0.0 -50.1">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.308 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.0200 -2.1700 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.400 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-2.5475 -2.4670 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.492 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-2.0750 -2.7640 0.6000" euler="0 0.0 -23.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.585 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.5325 -2.9010 0.6000" euler="0 0.0 9.0">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.677 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.0600 -2.6040 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.769 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-0.5875 -2.3070 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.862 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-0.1150 -2.0100 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 1.000 0.954 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.3575 -1.7130 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.954 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.8300 -1.4160 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.862 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.3025 -1.1190 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.769 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.7750 -0.8220 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.677 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.2475 -0.5250 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.585 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.7200 -0.2280 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.492 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.1925 0.0690 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.400 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.6650 0.3660 0.6000" euler="0 0.0 69.0">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.308 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.5100 0.8940 0.6000" euler="0 0.0 127.3">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.215 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="3.0375 1.1910 0.6000" euler="0 0.0 147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.123 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.1650 2.3680 0.6000" euler="0 0.0 147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.000 0.031 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.6925 2.6650 0.6000" euler="0 0.0 147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.062 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.2200 2.9620 0.6000" euler="0 0.0 176.5">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.154 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-0.2875 2.7250 0.6000" euler="0 0.0 -151.4">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.246 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-0.7600 2.4280 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.338 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.2325 2.1310 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.431 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.7050 1.8340 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.523 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-2.1775 1.5370 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.615 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-2.6500 1.2400 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.708 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.1225 0.9430 0.6000" euler="0 0.0 -147.8">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.800 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.5950 0.6460 0.6000" euler="0 0.0 -116.5">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.892 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.5450 0.0960 0.6000" euler="0 0.0 -58.3">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="0.985 0.000 1.000 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-3.0725 -0.2010 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.923 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.9525 -0.9050 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.831 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.4800 -1.2020 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.738 1"/>
+      <freejoint/>
+    </body>
+    <body pos="-1.0075 -1.4990 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.646 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.3400 -2.3460 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.554 1"/>
+      <freejoint/>
+    </body>
+    <body pos="0.8125 -2.6430 0.6000" euler="0 0.0 -32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.462 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.2850 -2.9400 0.6000" euler="0 0.0 -5.3">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.369 1"/>
+      <freejoint/>
+    </body>
+    <body pos="1.8100 -2.7360 0.6000" euler="0 0.0 26.7">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.277 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.2825 -2.4390 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.185 1"/>
+      <freejoint/>
+    </body>
+    <body pos="2.7550 -2.1420 0.6000" euler="0 0.0 32.2">
+      <geom type="box" size="0.1000 0.3000 0.6000" rgba="1.000 0.000 0.092 1"/>
+      <freejoint/>
+    </body>
+  </worldbody>
+</mujoco>

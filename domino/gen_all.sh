@@ -15,3 +15,15 @@ uv run python domino/gen_fanwall.py
 uv run python domino/gen_zigzagwall.py
 uv run python domino/gen_spiralwall.py
 uv run python domino/gen_dualpeaks.py
+uv run python domino/gen_heart.py
+uv run python domino/gen_star.py
+uv run python domino/gen_lissajous.py
+uv run python domino/gen_stairs.py
+uv run python domino/gen_maze.py
+uv run python domino/gen_bounce.py
+uv run python domino/gen_flower.py
+uv run python domino/gen_tree.py
+uv run python domino/gen_snake.py
+uv run python domino/gen_gear.py
+uv run python domino/gen_wavegrid.py
+uv run python domino/gen_arch.py
