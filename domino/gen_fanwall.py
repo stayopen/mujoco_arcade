@@ -41,8 +41,8 @@ for si in range(n_spokes):
     theta = np.radians(angle_deg)
 
     spoke_len = per_spoke * spoke_spacing + 2 * dyy
-    # Start t from 2*dyy so spokes don't overlap near the center
-    t_fine = np.linspace(2 * dyy, spoke_len, per_spoke * 100)
+    # Start t from 3*dyy so spokes don't overlap near the center
+    t_fine = np.linspace(3 * dyy, spoke_len, per_spoke * 100)
     px = t_fine * np.cos(theta)
     py = t_fine * np.sin(theta)
 

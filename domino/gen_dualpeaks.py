@@ -47,11 +47,9 @@ for peak_idx in range(2):
         # Vertical pillars
         x_offset = 0
         for j in range(layer_i):
-            is_first = (peak_idx == 0 and layer_i == N and j == 0)
-            tilt_y = 10 if is_first else 0
             px = cx + x_offset + dzz - dxx
 
-            domino_list.append(f'    <body pos="{px:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y:.1f} 0">')
+            domino_list.append(f'    <body pos="{px:.4f} 0 {dzz + height:.4f}" euler="0 0 0">')
             domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c1[0]:.3f} {c1[1]:.3f} {c1[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
@@ -68,7 +66,10 @@ for peak_idx in range(2):
         # Cross pieces on top of this layer
         bx = cx - x_offset + step
         for j in range(layer_i):
-            domino_list.append(f'    <body pos="{bx:.4f} 0 {height + 2 * dzz + dxx:.4f}" euler="0 90 0">')
+            is_top_peak0 = (peak_idx == 0 and layer_i == 1 and j == 0)
+            tilt_cross = 10 if is_top_peak0 else 0
+            z_offset = 0.15 if is_top_peak0 else 0.0
+            domino_list.append(f'    <body pos="{bx:.4f} 0 {height + 2 * dzz + dxx + z_offset:.4f}" euler="0 {90 + tilt_cross:.1f} 0">')
             domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c2[0]:.3f} {c2[1]:.3f} {c2[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')
             domino_list.append(f'    </body>')
