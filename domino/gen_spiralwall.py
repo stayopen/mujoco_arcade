@@ -47,8 +47,10 @@ new_s = np.interp(Ls, L, s)
 x = (initial_radius + b * new_s) * np.cos(new_s)
 y = (initial_radius + b * new_s) * np.sin(new_s)
 
-# Tangent angles
-angles = new_s + np.pi / 2  # perpendicular to radial direction
+# Exact tangent angles for the spiral
+r = initial_radius + b * new_s
+angles = np.arctan2(b * np.sin(new_s) + r * np.cos(new_s),
+                   b * np.cos(new_s) - r * np.sin(new_s))
 
 hues = np.linspace(0, 1, N, endpoint=False)
 colors = [colorsys.hsv_to_rgb(h, 1.0, 1.0) for h in hues]
@@ -60,7 +62,7 @@ count = 0
 for i in range(N):
     c = colors[i]
     euler_z = np.degrees(angles[i])
-    tilt_y = 5 if i == 0 else 0
+    tilt_y = 10 if i == 0 else 0
 
     domino_list.append(f'    <body pos="{x[i]:.4f} {y[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {euler_z:.1f}">')
     domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')

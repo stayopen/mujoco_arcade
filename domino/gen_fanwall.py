@@ -30,7 +30,7 @@ domino_list = []
 count = 0
 
 # Central starter domino
-domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="0 5.0 0">')
+domino_list.append(f'    <body pos="0 0 {dzz:.4f}" euler="0 10.0 0">')
 domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="1.0 0.2 0.2 1"/>')
 domino_list.append(f'      <freejoint/>')
 domino_list.append(f'    </body>')

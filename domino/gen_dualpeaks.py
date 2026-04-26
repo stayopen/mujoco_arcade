@@ -48,7 +48,7 @@ for peak_idx in range(2):
         x_offset = 0
         for j in range(layer_i):
             is_first = (peak_idx == 0 and layer_i == N and j == 0)
-            tilt_y = 5 if is_first else 0
+            tilt_y = 10 if is_first else 0
             px = cx + x_offset + dzz - dxx
 
             domino_list.append(f'    <body pos="{px:.4f} 0 {dzz + height:.4f}" euler="0 {tilt_y:.1f} 0">')
