@@ -51,7 +51,7 @@ count = 0
 for i in range(N):
     c = colors[i]
     euler_z = np.degrees(angles[i])
-    tilt_y = 10 if i == 0 else 0
+    tilt_y = 15 if i == 0 else 0
     domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {euler_z:.1f}">')
     domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
     domino_list.append(f'      <freejoint/>')

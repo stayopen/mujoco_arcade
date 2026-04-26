@@ -58,7 +58,7 @@ for p in range(n_petals):
     
     for i in range(len(px_f)):
         is_first = (count == 0)
-        tilt_y = 10 if is_first else 0
+        tilt_y = 15 if is_first else 0
         domino_list.append(f'    <body pos="{px_f[i]:.4f} {py_f[i]:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {np.degrees(angles[i]):.1f}">')
         domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')

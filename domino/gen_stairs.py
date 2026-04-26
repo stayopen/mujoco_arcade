@@ -35,7 +35,7 @@ for i in range(n_steps):
     pz = dzz + i * step_dz
     hue = i / n_steps
     c = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
-    tilt_y = 10 if i == 0 else 0
+    tilt_y = 15 if i == 0 else 0
     # Alternate slight y offset for visual interest
     py = 0.0 if i % 2 == 0 else 0.05
     domino_list.append(f'    <body pos="{px:.4f} {py:.4f} {pz:.4f}" euler="0 {tilt_y:.1f} 0">')

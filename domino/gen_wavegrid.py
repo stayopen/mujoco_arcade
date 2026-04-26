@@ -40,7 +40,7 @@ for j in range(ny):
         hue = (i + j) / (nx + ny)
         c = colorsys.hsv_to_rgb(hue, 0.8, 0.95)
         is_first = (count == 0)
-        tilt_y = 10 if is_first else 0
+        tilt_y = 15 if is_first else 0
         domino_list.append(f'    <body pos="{px:.4f} {py:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {np.degrees(angle):.1f}">')
         domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c[0]:.3f} {c[1]:.3f} {c[2]:.3f} 1"/>')
         domino_list.append(f'      <freejoint/>')

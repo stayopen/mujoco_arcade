@@ -55,7 +55,7 @@ for r in range(rows):
             hue = (r + c) / (rows + cols)
             c_color = colorsys.hsv_to_rgb(hue, 0.8, 0.9)
             is_first = (count == 0)
-            tilt_y = 10 if is_first else 0
+            tilt_y = 15 if is_first else 0
             domino_list.append(f'    <body pos="{px:.4f} {py:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} 0">')
             domino_list.append(f'      <geom type="box" size="{dxx:.4f} {dyy:.4f} {dzz:.4f}" rgba="{c_color[0]:.3f} {c_color[1]:.3f} {c_color[2]:.3f} 1"/>')
             domino_list.append(f'      <freejoint/>')

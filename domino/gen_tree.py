@@ -51,7 +51,7 @@ def branch(px, py, angle, length, depth, max_depth):
         if not can_place(bx, by, angle):
             continue
         is_first = (count == 0)
-        tilt_y = 10 if is_first else 0
+        tilt_y = 15 if is_first else 0
         hue = depth / max_depth
         c = colorsys.hsv_to_rgb(hue, 0.7 + 0.3*(1-depth/max_depth), 0.9)
         domino_list.append(f'    <body pos="{bx:.4f} {by:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {np.degrees(angle):.1f}">')

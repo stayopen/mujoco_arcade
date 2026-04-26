@@ -41,7 +41,7 @@ for i in range(n_teeth):
         px = r * np.cos(angle)
         py = r * np.sin(angle)
         is_first = (count == 0)
-        tilt_y = 10 if is_first else 0
+        tilt_y = 15 if is_first else 0
         hue = i / n_teeth
         c = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
         domino_list.append(f'    <body pos="{px:.4f} {py:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {np.degrees(angle + np.pi/2):.1f}">')

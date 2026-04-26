@@ -69,7 +69,7 @@ for seg_idx, (x1, y1, x2, y2) in enumerate(all_segments):
         px = x1 + ux * t
         py = y1 + uy * t
         is_first = (count == 0)
-        tilt_y = 10 if is_first else 0
+        tilt_y = 15 if is_first else 0
         hue = seg_idx / len(all_segments)
         c = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
         domino_list.append(f'    <body pos="{px:.4f} {py:.4f} {dzz:.4f}" euler="0 {tilt_y:.1f} {np.degrees(angle):.1f}">')
