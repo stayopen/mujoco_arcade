@@ -27,3 +27,8 @@ uv run python domino/gen_snake.py
 uv run python domino/gen_gear.py
 uv run python domino/gen_wavegrid.py
 uv run python domino/gen_arch.py
+uv run python domino/gen_blackhole.py
+uv run python domino/gen_mandala.py
+uv run python domino/gen_rollercoaster.py
+uv run python domino/gen_city.py
+uv run python domino/gen_dragon.py
