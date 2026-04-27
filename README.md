@@ -22,6 +22,7 @@ uv run python -m mujoco.viewer -mjcf=domino/castle.xml
 uv run python -m mujoco.viewer -mjcf=domino/zigzag_tower.xml
 uv run python -m mujoco.viewer -mjcf=domino/spiral_tower.xml
 uv run python -m mujoco.viewer -mjcf=domino/colosseum.xml
+uv run python -m mujoco.viewer -mjcf=domino/basketweave.xml
 uv run python -m mujoco.viewer -mjcf=domino/cascade.xml
 uv run python -m mujoco.viewer -mjcf=domino/fanwall.xml
 uv run python -m mujoco.viewer -mjcf=domino/zigzagwall.xml
