@@ -1,10 +1,8 @@
-import colorsys
-
 HEADER = """<mujoco>
   <visual>
     <headlight diffuse="0.6 0.6 0.6" ambient="0.1 0.1 0.1" specular="0 0 0"/>
     <rgba haze="0.15 0.25 0.35 1"/>
-    <global azimuth="120" elevation="-20"/>
+    <global azimuth="130" elevation="-18"/>
   </visual>
   <asset>
     <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
@@ -13,55 +11,58 @@ HEADER = """<mujoco>
   </asset>
 """
 
-# Basketweave tower parameters
-# Long, thin blocks that span across the tower
-block_thick = 0.06      # thin width (like thread)
-block_depth = 0.30      # depth (Y dimension when horizontal)
-block_height = 0.10     # vertical thickness per layer
-
-grid_n = 5              # 5x5 crossing points
-span = 2.0              # total span of crossing area
-spacing = span / (grid_n - 1)  # distance between crossing points
-half_span = span / 2.0
-
-num_layers = 24         # 24 layers
-
-# Colors: green, blue, pink/magenta, yellow
-colors = [
-    (0.2, 0.8, 0.2),   # green
-    (0.2, 0.4, 0.9),   # blue  
-    (0.9, 0.2, 0.6),   # pink/magenta
-    (0.9, 0.8, 0.1),   # yellow
+# Bright toy-block colors, ordered to resemble the reference photo.
+COLORS = [
+    (0.95, 0.08, 0.48),  # magenta
+    (0.05, 0.34, 0.88),  # blue
+    (0.00, 0.58, 0.18),  # green
+    (0.95, 0.78, 0.02),  # yellow
 ]
+
+beam_len = 1.12
+beam_w = 0.11
+course_z = 0.11
+
+x_cols = [-0.90, -0.30, 0.30, 0.90]
+y_faces = [-0.62, 0.62]
+layers = 32
 
 domino_list = []
 count = 0
 
-for layer in range(num_layers):
-    color = colors[(layer // 2) % 4]
-    z = block_height + layer * (2 * block_height)
-    
-    # Alternate direction by layer
+
+def add_box(x, y, z, sx, sy, sz, color):
+    global count
+    domino_list.append(f'    <body pos="{x:.4f} {y:.4f} {z:.4f}" euler="0 0 0">')
+    domino_list.append(
+        f'      <geom type="box" size="{sx:.4f} {sy:.4f} {sz:.4f}" '
+        f'rgba="{color[0]:.3f} {color[1]:.3f} {color[2]:.3f} 1"/>'
+    )
+    domino_list.append('      <freejoint/>')
+    domino_list.append('    </body>')
+    count += 1
+
+
+for layer in range(layers):
+    color = COLORS[layer % len(COLORS)]
+    z = course_z + layer * (2 * course_z)
+
     if layer % 2 == 0:
-        # X-aligned blocks (along X axis)
-        # Place one block per row, spanning full width
-        for i in range(grid_n):
-            y = -half_span + i * spacing
-            # Block centered at origin, extends from -half_span to +half_span in X
-            domino_list.append(f'    <body pos="0.0000 {y:.4f} {z:.4f}" euler="0 0 0">')
-            domino_list.append(f'      <geom type="box" size="{half_span} {block_thick} {block_height}" rgba="{color[0]:.3f} {color[1]:.3f} {color[2]:.3f} 1"/>')
-            domino_list.append(f'      <freejoint/>')
-            domino_list.append(f'    </body>')
-            count += 1
+        # Front/back horizontal planks, like the colored face bands in the photo.
+        for y in y_faces:
+            add_box(0.0, y, z, beam_len, beam_w, course_z, color)
     else:
-        # Y-aligned blocks (along Y axis)
-        for j in range(grid_n):
-            x = -half_span + j * spacing
-            domino_list.append(f'    <body pos="{x:.4f} 0.0000 {z:.4f}" euler="0 0 90">')
-            domino_list.append(f'      <geom type="box" size="{half_span} {block_thick} {block_height}" rgba="{color[0]:.3f} {color[1]:.3f} {color[2]:.3f} 1"/>')
-            domino_list.append(f'      <freejoint/>')
-            domino_list.append(f'    </body>')
-            count += 1
+        # Perpendicular cross courses create the woven side columns and support
+        # the next front/back layer at three contact points.
+        for x in x_cols:
+            add_box(x, 0.0, z, beam_w, beam_len * 0.72, course_z, color)
+
+# Small raised top teeth, matching the upright green tabs at the top of the image.
+top_color = COLORS[2]
+top_z = course_z + layers * (2 * course_z) + 0.14
+for x in x_cols:
+    for y in y_faces:
+        add_box(x, y, top_z, beam_w, beam_w, 0.25, top_color)
 
 bodies_xml = "\n".join(domino_list)
 xml = f"""{HEADER}  <worldbody>

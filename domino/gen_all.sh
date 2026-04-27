@@ -11,6 +11,7 @@ uv run python domino/gen_zigzag_tower.py
 uv run python domino/gen_spiral_tower.py
 uv run python domino/gen_colosseum.py
 uv run python domino/gen_basketweave.py
+uv run python domino/gen_woven_tower.py
 uv run python domino/gen_cascade.py
 uv run python domino/gen_fanwall.py
 uv run python domino/gen_zigzagwall.py
